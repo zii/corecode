@@ -1,0 +1,98 @@
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+<body>
+	<div id="app">
+		<p>{{title}}</p>
+		<div>{{content}}</div>
+		<a href="https://segmentfault.com/a/1190000006599500">参考</a>
+	</div>
+</body>
+
+<script>
+// cb渲染函数
+function Watcher(cb) {
+	this.cb = cb;
+}
+
+Watcher.prototype = {
+	render: function() {
+		if (this.cb) {
+			this.cb();
+		}
+	},
+}
+
+// current watch target
+var watcher = null;
+
+function Dep() {
+	this.subs = []; // watchers
+}
+
+Dep.prototype = {
+	watch: function(w) {
+		this.subs.push(w);
+	},
+	notify: function() {
+		for (w of this.subs) {
+			w.render();
+		}
+	}
+}
+
+function observe(vm, key, val) {
+	var dep = new Dep();
+	Object.defineProperty(vm, key, {
+		get: function () {
+			if (watcher) {
+				dep.watch(watcher);
+			}
+			return val;
+		},
+		set: function (newval) {
+			val = newval;
+			dep.notify();
+		}
+	});
+}
+
+function walk(vm) {
+	let keys = Object.keys(vm)
+	for (key of keys) {
+		var val = vm[key];
+		observe(vm, key, val);
+	}
+}
+
+function compile(data, node) {
+	var reg = /\{\{(.*)\}\}/;
+	if (node.nodeType === 3 && reg.test(node.textContent)) {
+		var key = RegExp.$1.trim();
+		watcher = new Watcher(function() {
+			node.textContent = data[key];
+		});
+		watcher.render();
+		watcher = null;
+	}
+	for (c of node.childNodes) {
+		compile(data, c);
+	}
+}
+
+function run(el, data) {
+	let root = document.querySelector(el);
+	walk(data);
+	compile(data, root);
+}
+
+var data = {
+	"title": "",
+	"content": ""
+}
+run("#app", data);
+data.title = "cat";
+data.content = "100行代码实现vue双向绑定";
+</script>
+</html>
