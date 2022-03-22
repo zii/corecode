@@ -2,6 +2,7 @@
 实现一个最简陋的操作系统
 
 ## 安装依赖
+```
 yum install -y nasm
 yum install -y glibc-devel.i686
 yum install -y glibc-static libstdc++-static
@@ -12,6 +13,7 @@ yum install -y seabios
 make iso
 qemu-system-i386 -cdrom build/kernel-x86.iso -vga std -d int,cpu_reset -no-reboot
 qemu-system-i386 -d int,cpu_reset -no-reboot -cdrom build/kernel-x86.iso -boot order=dc
+```
 
 ## 编译iso
 make iso
