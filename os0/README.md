@@ -1,6 +1,12 @@
 # os0
 实现一个最简陋的操作系统
 
+# 原理
+把asm编译成目标文件.o
+再把目标文件连接成kernel.bin
+kernel.bin是一个elf文件
+muiltiboot2引导的时候从elf的入口点开始执行
+
 ## 安装依赖
 ```
 yum install -y nasm

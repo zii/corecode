@@ -45,7 +45,7 @@ $(iso_target): $(kernel_target)
 
 	@cp arch/$(ARCH)/script/grub.cfg $(BUILD_DIR)/isofiles/boot/grub
 
-	@grub-mkrescue -o $(iso_target) $(BUILD_DIR)/isofiles 2>&1 | sed -e "s/^/  | /g"
+	@grub2-mkrescue -o $(iso_target) $(BUILD_DIR)/isofiles 2>&1 | sed -e "s/^/  | /g"
 	@rm -r $(BUILD_DIR)/isofiles
 
 run: iso
